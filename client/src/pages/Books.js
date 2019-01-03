@@ -15,13 +15,21 @@ class Books extends Component {
     title: "",
     author: "",
     synopsis: "",
-    bookResults: [],
-    bookSearch: ""
+    bookSearch: "",
+    bookresults: [],
   };
 
   componentDidMount() {
     this.loadBooks();
+    this.searchBooks("the sun also rises");
   }
+
+
+  searchBooks = query => {
+    API.search(query)
+      .then(res => this.setState({ bookresults: res.data }))
+      .catch(err => console.log(err));
+  };
 
   loadBooks = () => {
     API.getBooks()
@@ -30,7 +38,6 @@ class Books extends Component {
       )
       .catch(err => console.log(err));
   };
-
 
   deleteBook = id => {
     API.deleteBook(id)
@@ -57,12 +64,16 @@ class Books extends Component {
         .catch(err => console.log(err));
     }
     else {
-      API.getGoogleBooks(this.state.bookSearch)
-        .then(res => this.setState({ books: res.data }))
+      API.search(this.state.bookSearch)
+        .then(res =>
+          this.setState({ bookresults: res.data }))
+
         .catch(err => console.log(err));
     };
 
   };
+
+
 
   render() {
     return (
@@ -88,19 +99,20 @@ class Books extends Component {
             </form>
           </Col>
           <Col size="xs-9 sm-10">
-           
-              <h1>Search results</h1>
-        
-            {this.state.books.length ? (
+
+            <h1>Search results</h1>
+            {/* <ResultList results={this.state.bookresults} /> */}
+
+             {this.state.bookresults.length ? (
               <BookList>
-                {this.state.books.map(book => (
-                  <BookListItem key={book._id}>
-                    <Link to={"/books/" + book._id}>
+                {this.state.bookresults.map(bookresult => (
+                  <BookListItem key={bookresult._id}>
+                    {/* <BookLink to={"/books/" + bookresult._id}> */}
                       <strong>
-                        {book.title} by {book.author}
+                        {bookresult.title} by {bookresult.author}
                       </strong>
-                    </Link>
-                  
+                    {/* </BookLink> */}
+               
                   </BookListItem>
                 ))}
               </BookList>

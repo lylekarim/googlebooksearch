@@ -3,9 +3,10 @@ import axios from "axios";
 export default {
   
     // Gets google books
-    getGoogleBooks: function() {
-      return axios.get("/api/books");
+    search: function(query) {
+      return axios.get("https://www.googleapis.com/books/v1/volumes?q=" + query + "&projection=lite&maxResults=10");
     },
+
 
   // Gets all books
   getBooks: function() {
