@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import AddBtn from "../components/AddBtn";
 import DeleteBtn from "../components/DeleteBtn";
 import Jumbotron from "../components/Jumbotron";
 import API from "../utils/API";
@@ -27,9 +28,33 @@ class Books extends Component {
 
   searchBooks = query => {
     API.search(query)
-      .then(res => this.setState({ bookresults: res.data }))
+      .then(res => this.setState({ bookresults: res.data.items }))
       .catch(err => console.log(err));
   };
+
+  // key={bookresult.id}
+  // title={bookresult.volumeInfo.title}
+  // thumbnail={bookresult.volumeInfo.imageLinks.thumbnail}
+  // author={bookresult.volumeInfo.authors}
+  // description={bookresult.volumeInfo.description}
+  // href={bookresult.volumeInfo.previewLink}
+
+  addBook = event => {
+    event.preventDefault();
+    
+      API.saveBook({
+        title: bookresult.volumeInfo.title,
+        author: bookresult.volumeInfo.authors,
+        synopsis: bookresult.volumeInfo.description,
+      })
+        .then(res => this.loadBooks())
+        .catch(err => console.log(err));
+    
+  }
+
+
+
+
 
   loadBooks = () => {
     API.getBooks()
@@ -44,6 +69,7 @@ class Books extends Component {
       .then(res => this.loadBooks())
       .catch(err => console.log(err));
   };
+
 
   handleInputChange = event => {
     const { name, value } = event.target;
@@ -66,13 +92,12 @@ class Books extends Component {
     else {
       API.search(this.state.bookSearch)
         .then(res =>
-          this.setState({ bookresults: res.data }))
+          this.setState({ bookresults: res.data.items }))
 
         .catch(err => console.log(err));
     };
 
   };
-
 
 
   render() {
@@ -101,24 +126,27 @@ class Books extends Component {
           <Col size="xs-9 sm-10">
 
             <h1>Search results</h1>
-            {/* <ResultList results={this.state.bookresults} /> */}
-
-             {this.state.bookresults.length ? (
+        
+            {!this.state.bookresults.length ? ( 
+               <h1 className="text-center">No Books to Display</h1> 
+               ) : (
               <BookList>
-                {this.state.bookresults.map(bookresult => (
-                  <BookListItem key={bookresult._id}>
-                    {/* <BookLink to={"/books/" + bookresult._id}> */}
-                      <strong>
-                        {bookresult.title} by {bookresult.author}
-                      </strong>
-                    {/* </BookLink> */}
-               
-                  </BookListItem>
-                ))}
+                {this.state.bookresults.map(bookresult => {
+                  return (
+                    <BookListItem
+                      key={bookresult.id}
+                      title={bookresult.volumeInfo.title}
+                      thumbnail={bookresult.volumeInfo.imageLinks.thumbnail}
+                      author={bookresult.volumeInfo.authors}
+                      description={bookresult.volumeInfo.description}
+                      href={bookresult.volumeInfo.previewLink}>
+                    
+                    </BookListItem>
+                    
+                  );
+                })}
               </BookList>
-            ) : (
-                <h3>No Results to Display</h3>
-              )}
+               )} 
           </Col>
         </Row>
         <Row>
