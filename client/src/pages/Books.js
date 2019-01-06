@@ -18,6 +18,7 @@ class Books extends Component {
     synopsis: "",
     bookSearch: "",
     bookresults: [],
+    saved: [],
   };
 
   componentDidMount() {
@@ -32,181 +33,184 @@ class Books extends Component {
       .catch(err => console.log(err));
   };
 
-  // key={bookresult.id}
-  // title={bookresult.volumeInfo.title}
-  // thumbnail={bookresult.volumeInfo.imageLinks.thumbnail}
-  // author={bookresult.volumeInfo.authors}
-  // description={bookresult.volumeInfo.description}
-  // href={bookresult.volumeInfo.previewLink}
 
   addBook = event => {
     event.preventDefault();
-    
-      API.saveBook({
-        title: bookresult.volumeInfo.title,
-        author: bookresult.volumeInfo.authors,
-        synopsis: bookresult.volumeInfo.description,
-      })
-        .then(res => this.loadBooks())
-        .catch(err => console.log(err));
-    
-  }
+    const data = {}
+    data.book = this.state.bookresult
+    console.log(data)
+    //data.title = this.state.bookresult.title
+    alert(JSON.stringify(data, null, 2))
 
-
-
-
-
-  loadBooks = () => {
-    API.getBooks()
-      .then(res =>
-        this.setState({ books: res.data, title: "", author: "", synopsis: "" })
-      )
-      .catch(err => console.log(err));
-  };
-
-  deleteBook = id => {
-    API.deleteBook(id)
+    API.saveBook(data)
       .then(res => this.loadBooks())
       .catch(err => console.log(err));
-  };
+
+  }
+    // API.saveBook({
+    //   title: this.state.title,
+    //   author: this.state.author,
+    //   synopsis: this.state.synopsis
+    // })
+    //   .then(res => this.loadBooks())
+    //   .catch(err => console.log(err));
 
 
-  handleInputChange = event => {
-    const { name, value } = event.target;
-    this.setState({
-      [name]: value
-    });
-  };
 
-  handleFormSubmit = event => {
-    event.preventDefault();
-    if (this.state.title && this.state.author) {
-      API.saveBook({
-        title: this.state.title,
-        author: this.state.author,
-        synopsis: this.state.synopsis
-      })
-        .then(res => this.loadBooks())
-        .catch(err => console.log(err));
-    }
-    else {
-      API.search(this.state.bookSearch)
+    loadBooks = () => {
+      API.getBooks()
         .then(res =>
-          this.setState({ bookresults: res.data.items }))
-
+          this.setState({ books: res.data, title: "", author: "", synopsis: "" })
+        )
         .catch(err => console.log(err));
     };
 
-  };
+    deleteBook = id => {
+      API.deleteBook(id)
+        .then(res => this.loadBooks())
+        .catch(err => console.log(err));
+    };
 
 
-  render() {
-    return (
-      <Container fluid>
-        <Row>
-          <Col size="xs-9 sm-10">
-            <h2>Search Google Books</h2>
-            <form>
+    handleInputChange = event => {
+      const { name, value } = event.target;
+      this.setState({
+        [name]: value
+      });
+    };
 
-              <Input
-                name="bookSearch"
-                value={this.state.bookSearch}
-                onChange={this.handleInputChange}
-                placeholder="Search For a Book"
-              />
-              <FormBtn
-                disabled={!(this.state.bookSearch)}
-                onClick={this.handleFormSubmit}
-              >
-                Search
+    handleFormSubmit = event => {
+      event.preventDefault();
+      if (this.state.title && this.state.author) {
+        API.saveBook({
+          title: this.state.title,
+          author: this.state.author,
+          synopsis: this.state.synopsis
+        })
+          .then(res => this.loadBooks())
+          .catch(err => console.log(err));
+      }
+      else {
+        API.search(this.state.bookSearch)
+          .then(res =>
+            this.setState({ bookresults: res.data.items }))
+
+          .catch(err => console.log(err));
+      };
+
+    };
+
+
+    render() {
+      return (
+        <Container fluid>
+          <Row>
+            <Col size="xs-9 sm-10">
+              <h2>Search Google Books</h2>
+              <form>
+
+                <Input
+                  name="bookSearch"
+                  value={this.state.bookSearch}
+                  onChange={this.handleInputChange}
+                  placeholder="Search For a Book"
+                />
+                <FormBtn
+                  disabled={!(this.state.bookSearch)}
+                  onClick={this.handleFormSubmit}
+                >
+                  Search
               </FormBtn>
 
-            </form>
-          </Col>
-          <Col size="xs-9 sm-10">
+              </form>
+            </Col>
+            <Col size="xs-9 sm-10">
 
-            <h1>Search results</h1>
-        
-            {!this.state.bookresults.length ? ( 
-               <h1 className="text-center">No Books to Display</h1> 
-               ) : (
-              <BookList>
-                {this.state.bookresults.map(bookresult => {
-                  return (
-                    <BookListItem
-                      key={bookresult.id}
-                      title={bookresult.volumeInfo.title}
-                      thumbnail={bookresult.volumeInfo.imageLinks.thumbnail}
-                      author={bookresult.volumeInfo.authors}
-                      description={bookresult.volumeInfo.description}
-                      href={bookresult.volumeInfo.previewLink}>
-                    
-                    </BookListItem>
-                    
-                  );
-                })}
-              </BookList>
-               )} 
-          </Col>
-        </Row>
-        <Row>
-          <Col size="xs-12">
-            <Jumbotron>
-              <h1>What Books Should I Read?</h1>
-            </Jumbotron>
-            <form>
+              <h1>Search results</h1>
 
-              <Input
-                value={this.state.title}
-                onChange={this.handleInputChange}
-                name="title"
-                placeholder="Title (required)"
-              />
-              <Input
-                value={this.state.author}
-                onChange={this.handleInputChange}
-                name="author"
-                placeholder="Author (required)"
-              />
-              <TextArea
-                value={this.state.synopsis}
-                onChange={this.handleInputChange}
-                name="synopsis"
-                placeholder="Synopsis (Optional)"
-              />
-              <FormBtn
-                disabled={!(this.state.author && this.state.title)}
-                onClick={this.handleFormSubmit}
-              >
-                Submit Book
+              {!this.state.bookresults.length ? (
+                <h1 className="text-center">No Books to Display</h1>
+              ) : (
+                  <BookList>
+                    {this.state.bookresults.map(bookresult => {
+                      return (
+                        <BookListItem
+                          key={bookresult.id}
+                          title={bookresult.volumeInfo.title}
+                          thumbnail={bookresult.volumeInfo.imageLinks.thumbnail}
+                          author={bookresult.volumeInfo.authors}
+                          description={bookresult.volumeInfo.description}
+                          href={bookresult.volumeInfo.previewLink}>
+                          <AddBtn onClick={() => this.addBook(BookListItem)} />
+                        </BookListItem>
+
+                      );
+                    })}
+                  </BookList>
+
+                )}
+
+
+            </Col>
+          </Row>
+          <Row>
+            <Col size="xs-12">
+              <Jumbotron>
+                <h1>What Books Should I Read?</h1>
+              </Jumbotron>
+              <form>
+
+                <Input
+                  value={this.state.title}
+                  onChange={this.handleInputChange}
+                  name="title"
+                  placeholder="Title (required)"
+                />
+                <Input
+                  value={this.state.author}
+                  onChange={this.handleInputChange}
+                  name="author"
+                  placeholder="Author (required)"
+                />
+                <TextArea
+                  value={this.state.synopsis}
+                  onChange={this.handleInputChange}
+                  name="synopsis"
+                  placeholder="Synopsis (Optional)"
+                />
+                <FormBtn
+                  disabled={!(this.state.author && this.state.title)}
+                  onClick={this.handleFormSubmit}
+                >
+                  Submit Book
               </FormBtn>
-            </form>
-          </Col>
-          <Col size="md-6 sm-12">
-            <Jumbotron>
-              <h1>Books On My List</h1>
-            </Jumbotron>
-            {this.state.books.length ? (
-              <List>
-                {this.state.books.map(book => (
-                  <ListItem key={book._id}>
-                    <Link to={"/books/" + book._id}>
-                      <strong>
-                        {book.title} by {book.author}
-                      </strong>
-                    </Link>
-                    <DeleteBtn onClick={() => this.deleteBook(book._id)} />
-                  </ListItem>
-                ))}
-              </List>
-            ) : (
-                <h3>No Results to Display</h3>
-              )}
-          </Col>
-        </Row>
-      </Container>
-    );
+              </form>
+            </Col>
+            <Col size="md-6 sm-12">
+              <Jumbotron>
+                <h1>Books On My List</h1>
+              </Jumbotron>
+              {this.state.books.length ? (
+                <List>
+                  {this.state.books.map(book => (
+                    <ListItem key={book._id}>
+                      <Link to={"/books/" + book._id}>
+                        <strong>
+                          {book.title} by {book.author}
+                        </strong>
+                      </Link>
+                      <DeleteBtn onClick={() => this.deleteBook(book._id)} />
+                    </ListItem>
+                  ))}
+                </List>
+              ) : (
+                  <h3>No Results to Display</h3>
+                )}
+            </Col>
+          </Row>
+        </Container>
+      );
+    }
   }
-}
 
-export default Books;
+  export default Books;

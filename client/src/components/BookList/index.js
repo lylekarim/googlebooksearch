@@ -1,5 +1,6 @@
 import React from "react";
  import Thumbnail from "../Thumbnail";
+ import AddBtn from "../AddBtn";
  import { Container, Row, Col } from "../Grid";
 // Exporting both BookList and BookListItem from this file
 
@@ -30,6 +31,7 @@ export function BookListItem({
             Go to book!
           </a>
           <p>Description: {description}</p>
+          <AddBtn/>
         </Col>
       </Row>
     </Container>
