@@ -7,6 +7,7 @@ const bookSchema = new Schema({
   description: String,
   thumbnail: { type: String, default: "https://placehold.it/300x300" },
   href: String,
+  isSaved: { type: Boolean, default: true },
   date: { type: Date, default: Date.now }
 });
 

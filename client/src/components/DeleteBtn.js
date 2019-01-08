@@ -1,13 +1,15 @@
 import React from "react";
-import "./style.css";
+import {
+  Button
+} from 'rebass'
 
 // The ...props means, spread all of the passed props onto this element
 // That way we don't have to define them all individually
 function DeleteBtn(props) {
   return (
-    <span className="delete-btn" {...props} role="button" tabIndex="0">
-      ✗
-    </span>
+    <Button bg='gray' m={2}  cursor='pointer' className="delete-btn" {...props} role="button" tabIndex="0">
+    ✗ Delete Book 
+    </Button>
   );
 }
 

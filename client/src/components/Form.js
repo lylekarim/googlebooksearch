@@ -1,4 +1,7 @@
 import React from "react";
+import {
+  Button
+} from 'rebass'
 
 // This file exports the Input, TextArea, and FormBtn components
 
@@ -13,15 +16,15 @@ export function Input(props) {
 export function TextArea(props) {
   return (
     <div className="form-group">
-      <textarea className="form-control" rows="20" {...props} />
+      <textarea className="form-control" rows="10" {...props} />
     </div>
   );
 }
 
 export function FormBtn(props) {
   return (
-    <button {...props} style={{ float: "right", marginBottom: 10 }} className="btn btn-success">
+    <Button {...props} style={{ float: "right", marginBottom: 10 }}>
       {props.children}
-    </button>
+    </Button>
   );
 }

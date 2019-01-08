@@ -20,9 +20,6 @@ export function List({ children }) {
   );
 }
 
-// export function ListItem({ children }) {
-//   return <li className="list-group-item">{children}</li>;
-// }
 
 export function ListItem({
 srcUrl,
@@ -31,7 +28,7 @@ text,
 onClick,
 }) {
   return (
-  <Box width={256}>
+  <Box width={280} m={4} pl={2}>
     <Card
       p={1}
       borderRadius={2}
@@ -40,10 +37,10 @@ onClick,
         borderRadius={2}
         src={srcUrl} />
       <Box px={2}>
-        <Heading as='h3'>
+        <Heading p={2} as='h3'>
           {heading}
         </Heading>
-        <Text fontSize={0}>
+        <Text p={2} fontSize={0}>
           {text}
         </Text>
       </Box>
