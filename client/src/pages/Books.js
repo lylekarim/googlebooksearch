@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import AddBtn from "../components/AddBtn";
 import DeleteBtn from "../components/DeleteBtn";
 import Jumbotron from "../components/Jumbotron";
 import API from "../utils/API";
@@ -15,10 +14,11 @@ class Books extends Component {
     books: [],
     title: "",
     author: "",
-    synopsis: "",
+    thumbnail: "",
+    href: "",
+    description: "",
     bookSearch: "",
     bookresults: [],
-    saved: [],
   };
 
   componentDidMount() {
@@ -34,33 +34,21 @@ class Books extends Component {
   };
 
 
-  addBook = event => {
-    event.preventDefault();
-    const data = {}
-    data.book = this.state.bookresult
-    console.log(data)
-    //data.title = this.state.bookresult.title
-    alert(JSON.stringify(data, null, 2))
-
-    API.saveBook(data)
+  addBook = book => {
+   
+    console.log(book)
+  
+    API.saveBook(book)
       .then(res => this.loadBooks())
       .catch(err => console.log(err));
 
   }
-    // API.saveBook({
-    //   title: this.state.title,
-    //   author: this.state.author,
-    //   synopsis: this.state.synopsis
-    // })
-    //   .then(res => this.loadBooks())
-    //   .catch(err => console.log(err));
-
 
 
     loadBooks = () => {
       API.getBooks()
         .then(res =>
-          this.setState({ books: res.data, title: "", author: "", synopsis: "" })
+          this.setState({ books: res.data, title: "", author: "", thumbnail: "", description: "" ,})
         )
         .catch(err => console.log(err));
     };
@@ -85,7 +73,8 @@ class Books extends Component {
         API.saveBook({
           title: this.state.title,
           author: this.state.author,
-          synopsis: this.state.synopsis
+          thumbnail: this.state.thumbnail,
+          description: this.state.description
         })
           .then(res => this.loadBooks())
           .catch(err => console.log(err));
@@ -133,6 +122,11 @@ class Books extends Component {
               ) : (
                   <BookList>
                     {this.state.bookresults.map(bookresult => {
+                      let book = {
+                        title: bookresult.volumeInfo.title,
+                        author: bookresult.volumeInfo.authors,
+                        description: bookresult.volumeInfo.description,
+                      }
                       return (
                         <BookListItem
                           key={bookresult.id}
@@ -140,8 +134,8 @@ class Books extends Component {
                           thumbnail={bookresult.volumeInfo.imageLinks.thumbnail}
                           author={bookresult.volumeInfo.authors}
                           description={bookresult.volumeInfo.description}
-                          href={bookresult.volumeInfo.previewLink}>
-                          <AddBtn onClick={() => this.addBook(BookListItem)} />
+                          href={bookresult.volumeInfo.previewLink}
+                          onClick={() => this.addBook(book)}>
                         </BookListItem>
 
                       );
@@ -156,7 +150,7 @@ class Books extends Component {
           <Row>
             <Col size="xs-12">
               <Jumbotron>
-                <h1>What Books Should I Read?</h1>
+                <h1>Add a new book to My Book List</h1>
               </Jumbotron>
               <form>
 
@@ -172,11 +166,17 @@ class Books extends Component {
                   name="author"
                   placeholder="Author (required)"
                 />
-                <TextArea
-                  value={this.state.synopsis}
+                 <TextArea
+                  value={this.state.thumbnail}
                   onChange={this.handleInputChange}
-                  name="synopsis"
-                  placeholder="Synopsis (Optional)"
+                  name="thumbnail"
+                  placeholder="Thumbnail (Optional)"
+                />
+                <TextArea
+                  value={this.state.description}
+                  onChange={this.handleInputChange}
+                  name="description"
+                  placeholder="Description (Optional)"
                 />
                 <FormBtn
                   disabled={!(this.state.author && this.state.title)}
@@ -188,12 +188,12 @@ class Books extends Component {
             </Col>
             <Col size="md-6 sm-12">
               <Jumbotron>
-                <h1>Books On My List</h1>
+                <h1>All Books On My List</h1>
               </Jumbotron>
               {this.state.books.length ? (
                 <List>
                   {this.state.books.map(book => (
-                    <ListItem key={book._id}>
+                    <ListItem key={book._id} srcUrl={book.thumbnail} heading={book.title} text={book.description}>
                       <Link to={"/books/" + book._id}>
                         <strong>
                           {book.title} by {book.author}

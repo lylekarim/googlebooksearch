@@ -2,7 +2,6 @@ import React from "react";
  import Thumbnail from "../Thumbnail";
  import AddBtn from "../AddBtn";
  import { Container, Row, Col } from "../Grid";
-// Exporting both BookList and BookListItem from this file
 
 // BookList renders a bootstrap list item
 export function BookList({ children }) {
@@ -16,6 +15,7 @@ export function BookListItem({
   author,
   href,
   description,
+  onClick,
 }) {
   return (
     <li className="list-group-item">
@@ -31,7 +31,7 @@ export function BookListItem({
             Go to book!
           </a>
           <p>Description: {description}</p>
-          <AddBtn/>
+          <AddBtn onClick={onClick}/>
         </Col>
       </Row>
     </Container>

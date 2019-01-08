@@ -1,7 +1,14 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import { Col, Row, Container } from "../components/Grid";
-import Jumbotron from "../components/Jumbotron";
+
+import {
+  Box,
+  Card,
+  Image,
+  Heading,
+  Text
+} from 'rebass';
 import API from "../utils/API";
 
 class Detail extends Component {
@@ -21,26 +28,40 @@ class Detail extends Component {
       <Container fluid>
         <Row>
           <Col size="md-12">
-            <Jumbotron>
-              <h1>
-                {this.state.book.title} by {this.state.book.author}
-              </h1>
-            </Jumbotron>
+            <Box width={600}>
+              <Card
+                p={1}
+                borderRadius={2}
+                boxShadow='0 0 16px rgba(0, 0, 0, .25)'>
+                <Image src={this.state.book.thumbnail} />
+
+                <Box px={2}>
+                  <Heading as='h3'>
+                    {this.state.book.title} by {this.state.book.author}
+                  </Heading>
+                  <Text fontSize={0}>
+                    {this.state.book.description}
+                  </Text>
+                </Box>
+              </Card>
+            </Box>;
           </Col>
         </Row>
-        <Row>
+
+        {/* <Row>
+     
           <Col size="md-10 md-offset-1">
             <article>
-              <h1>Synopsis</h1>
+              <h1>Description</h1>
               <p>
-                {this.state.book.synopsis}
+                {this.state.book.description}
               </p>
             </article>
           </Col>
-        </Row>
+        </Row> */}
         <Row>
           <Col size="md-2">
-            <Link to="/">← Back to Authors</Link>
+            <Link to="/">← Back to Books</Link>
           </Col>
         </Row>
       </Container>
