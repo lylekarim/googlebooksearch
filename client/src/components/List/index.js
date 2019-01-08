@@ -1,5 +1,6 @@
 import React from "react";
 import "./style.css";
+import DeleteBtn from "../DeleteBtn";
 import {
   Box,
   Card,
@@ -27,6 +28,7 @@ export function ListItem({
 srcUrl,
 heading,
 text,
+onClick,
 }) {
   return (
   <Box width={256}>
@@ -45,6 +47,7 @@ text,
           {text}
         </Text>
       </Box>
+      <DeleteBtn onClick={onClick}/>
     </Card>
   </Box>
   );

@@ -1,6 +1,6 @@
 import React from "react";
  import Thumbnail from "../Thumbnail";
- import AddBtn from "../AddBtn";
+ import AddBtn from "../AddBtn";  
  import { Container, Row, Col } from "../Grid";
 
 // BookList renders a bootstrap list item

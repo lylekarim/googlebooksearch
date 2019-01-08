@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import DeleteBtn from "../components/DeleteBtn";
 import Jumbotron from "../components/Jumbotron";
 import API from "../utils/API";
 import { Link } from "react-router-dom";
@@ -36,8 +35,6 @@ class Books extends Component {
 
   addBook = book => {
    
-    console.log(book)
-  
     API.saveBook(book)
       .then(res => this.loadBooks())
       .catch(err => console.log(err));
@@ -148,12 +145,37 @@ class Books extends Component {
             </Col>
           </Row>
           <Row>
-            <Col size="xs-12">
+           
+            <Col size="md-8 sm-12">
               <Jumbotron>
-                <h1>Add a new book to My Book List</h1>
+                <h1>My Saved Books</h1>
               </Jumbotron>
-              <form>
-
+              {this.state.books.length ? (
+                <List>
+                  {this.state.books.map(book => (
+                    <ListItem 
+                    key={book._id} 
+                    srcUrl={book.thumbnail} 
+                    heading={book.title} 
+                    text={book.description}
+                    onClick={() => this.deleteBook(book._id)}>
+                      <Link to={"/books/" + book._id}>
+                        <strong>
+                          {book.title} by {book.author}
+                        </strong>
+                      </Link>
+                           </ListItem>
+                  ))}
+                </List>
+              ) : (
+                  <h3>No Results to Display</h3>
+                )}
+            </Col>
+            <Col size="md-4 xs-12">
+              <Jumbotron>
+                <h1>Add a new book</h1>
+              </Jumbotron>
+              <form>  
                 <Input
                   value={this.state.title}
                   onChange={this.handleInputChange}
@@ -166,7 +188,7 @@ class Books extends Component {
                   name="author"
                   placeholder="Author (required)"
                 />
-                 <TextArea
+                 <Input
                   value={this.state.thumbnail}
                   onChange={this.handleInputChange}
                   name="thumbnail"
@@ -185,27 +207,6 @@ class Books extends Component {
                   Submit Book
               </FormBtn>
               </form>
-            </Col>
-            <Col size="md-6 sm-12">
-              <Jumbotron>
-                <h1>All Books On My List</h1>
-              </Jumbotron>
-              {this.state.books.length ? (
-                <List>
-                  {this.state.books.map(book => (
-                    <ListItem key={book._id} srcUrl={book.thumbnail} heading={book.title} text={book.description}>
-                      <Link to={"/books/" + book._id}>
-                        <strong>
-                          {book.title} by {book.author}
-                        </strong>
-                      </Link>
-                      <DeleteBtn onClick={() => this.deleteBook(book._id)} />
-                    </ListItem>
-                  ))}
-                </List>
-              ) : (
-                  <h3>No Results to Display</h3>
-                )}
             </Col>
           </Row>
         </Container>
